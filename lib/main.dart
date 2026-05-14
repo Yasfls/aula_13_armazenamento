@@ -1,15 +1,49 @@
 import 'package:flutter/material.dart';
-import 'services/storage_service.dart';
-import 'migration/migration_service.dart';
-import 'pages/todo_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'models/user_profile.dart';
+import 'services/settings_service.dart';
+import 'services/migration_service.dart';
+import 'screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await StorageService.init();
+  await Hive.initFlutter();
 
-  final migration = MigrationService();
-  await migration.migrate();
+  Hive.registerAdapter(UserProfileAdapter());
 
-  runApp(MaterialApp(home: TodoPage()));
+  await Hive.openBox<UserProfile>('profileBox');
+
+  final settingsService = SettingsService();
+  await settingsService.loadSettings();
+
+  await MigrationService().migrate();
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => settingsService,
+      child: const LocalVaultApp(),
+    ),
+  );
+}
+
+class LocalVaultApp extends StatelessWidget {
+  const LocalVaultApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsService>(context);
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'LocalVault',
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: settings.isDarkMode
+          ? ThemeMode.dark
+          : ThemeMode.light,
+      home: const HomeScreen(),
+    );
+  }
 }
