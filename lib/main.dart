@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+
 import 'models/user_profile.dart';
 import 'services/settings_service.dart';
 import 'services/migration_service.dart';
@@ -40,9 +41,8 @@ class LocalVaultApp extends StatelessWidget {
       title: 'LocalVault',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: settings.isDarkMode
-          ? ThemeMode.dark
-          : ThemeMode.light,
+      themeMode:
+          settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: const HomeScreen(),
     );
   }

@@ -45,4 +45,6 @@ class SettingsService extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  bool get isEnglish => language == 'English';
 }

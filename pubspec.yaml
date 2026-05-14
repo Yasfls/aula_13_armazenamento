@@ -1,6 +1,6 @@
 name: localvault
 
-description: App de armazenamento local
+description: Aplicativo Flutter com armazenamento local usando SharedPreferences, Hive e flutter_secure_storage.
 
 publish_to: 'none'
 
